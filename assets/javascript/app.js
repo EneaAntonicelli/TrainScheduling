@@ -56,6 +56,7 @@ database.ref().on("child_added", function (snapshot) {
     var nextArrivalTime = diffTime % frequency;
     console.log(nextArrivalTime);
 
+    
     var minutesAway = frequency - nextArrivalTime;
     console.log("MINUTES TILL TRAIN: " + minutesAway);
 
