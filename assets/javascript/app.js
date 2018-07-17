@@ -47,18 +47,21 @@ database.ref().on("child_added", function (snapshot) {
     frequency = parseInt(snapshot.val().frequency);
     console.log(frequency);
 
-    var firstTimeConverted = moment(firstTrainTime, "HH:mm").subtract(1, "years");
-    console.log("TIME CONVERTED: " + firstTimeConverted);
+    var firstTrainTimeConverted = moment(firstTrainTime, "HH:mm").subtract(1, "years");
+    console.log("TIME CONVERTED: " + firstTrainTimeConverted);
 
-    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-    console.log("DIFFERENCE IN TIME: " + diffTime);
+    var tMinusFirstTrainStartTime = moment().diff(moment(firstTrainTimeConverted), "minutes");
+    console.log("DIFFERENCE IN TIME: " + tMinusFirstTrainStartTime);
 
-    var nextArrivalTime = diffTime % frequency;
-    console.log(nextArrivalTime);
+    var timeDifference = tMinusFirstTrainStartTime % frequency;
+    console.log(timeDifference);
 
     
-    var minutesAway = frequency - nextArrivalTime;
+    var minutesAway = frequency - timeDifference;
     console.log("MINUTES TILL TRAIN: " + minutesAway);
+
+    var nextArrivalTime = moment().add(minutesAway, "minutes").format("HH:mm");
+  console.log("ARRIVAL TIME: " + moment(nextArrivalTime).format("HH:mm"));
 
 
     var newRow = $("<tr>").append(
