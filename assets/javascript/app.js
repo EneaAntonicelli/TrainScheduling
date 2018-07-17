@@ -87,8 +87,7 @@ database.ref().on("child_added", function (snapshot) {
 });
 
 // FUNCTION THAT ALLOWS ME TO EDIT CELL DATA
-database.ref().on("value", function(snapshot) {
-    
+
 function contentEditable() {
     $('.td').attr('contenteditable', 'true');
     $(this).text("Done");
@@ -102,14 +101,20 @@ function contentDone () {
     $(this).removeClass("done");
     $(this).addClass("editBtn");
 }
-console.log(contentEditable);
+
+function removeRow () {
+    $(this).addClass("remove")
+    $(this).closest ('tr').remove ();
+}
+
 
 //ON CLICK OF .editBtn CLASS, ALLOW DATA TO BE EDITED BY RUNNING THE FUNCTION ABOVE
 
 $(document).on("click", ".editBtn", contentEditable);
 $(document).on("click", ".done", contentDone);
+$(document).on("click", ".removeBtn", removeRow);
 
-});
+
     
 
 
