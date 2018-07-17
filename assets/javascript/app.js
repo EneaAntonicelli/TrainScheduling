@@ -6,13 +6,14 @@ var config = {
     projectId: "train-scheduler-8e371",
     storageBucket: "",
     messagingSenderId: "568654097827"
-  };
-  firebase.initializeApp(config);
+};
+firebase.initializeApp(config);
 
 var database = firebase.database();
 
+$(document).ready(function () {
+
 $("form").submit(function (event) {
-    // $("#submitButton").on("click", function (event) {
     event.preventDefault();
 
     var newObj = {
@@ -27,17 +28,17 @@ $("form").submit(function (event) {
 });
 
 function displayRealTime() {
-    setInterval(function(){
+    setInterval(function () {
         $('#current-time').html("The current time is: " + moment().format('hh:mm A'))
-      }, 1000);
-    }
-    displayRealTime();
+    }, 1000);
+}
+displayRealTime();
 
 
 
 database.ref().on("child_added", function (snapshot) {
 
-   // DATABASE REFERENCES
+    // DATABASE REFERENCES
     trainName = snapshot.val().trainName;
     console.log(trainName);
     destination = snapshot.val().destination;
@@ -56,25 +57,28 @@ database.ref().on("child_added", function (snapshot) {
     var timeDifference = tMinusFirstTrainStartTime % frequency;
     console.log(timeDifference);
 
-    
+
     var minutesAway = frequency - timeDifference;
     console.log("MINUTES TILL TRAIN: " + minutesAway);
 
     var nextArrivalTime = moment().add(minutesAway, "minutes").format("HH:mm");
-  console.log("ARRIVAL TIME: " + moment(nextArrivalTime).format("HH:mm"));
+    console.log("ARRIVAL TIME: " + moment(nextArrivalTime).format("HH:mm"));
 
 
     var newRow = $("<tr>").append(
-        $("<td>").text(trainName),
-        $("<td>").text(destination),
-        $("<td>").text(firstTrainTime),
-        $("<td>").text(frequency),
+        
+        $("<td>").addClass("td").text(trainName),
+        $("<td>").addClass("td").text(destination),
+        $("<td>").addClass("td").text(firstTrainTime),
+        $("<td>").addClass("td").text(frequency),
         $("<td>").text(minutesAway),
-        $("<td>").text(nextArrivalTime) 
+        $("<td>").text(nextArrivalTime),
+        $('<button/>').addClass("btn btn-info btn-sm editBtn").text("Edit"),
+        $('<button/>').addClass("btn btn-danger btn-sm removeBtn").text("Remove")
     );
 
     $('.tbody').append(newRow);
- 
+
 
 }, function (errorObject) {
 
@@ -82,7 +86,35 @@ database.ref().on("child_added", function (snapshot) {
     console.log("The read failed: " + errorObject.code);
 });
 
+// FUNCTION THAT ALLOWS ME TO EDIT CELL DATA
+database.ref().on("value", function(snapshot) {
+    
+function contentEditable() {
+    $('.td').attr('contenteditable', 'true');
+    $(this).text("Done");
+    $(this).removeClass("editBtn");
+    $(this).addClass("done");
+}
+
+function contentDone () {
+    $('.td').attr('contenteditable', 'false');
+    $(this).text("Edit");
+    $(this).removeClass("done");
+    $(this).addClass("editBtn");
+}
+console.log(contentEditable);
+
+//ON CLICK OF .editBtn CLASS, ALLOW DATA TO BE EDITED BY RUNNING THE FUNCTION ABOVE
+
+$(document).on("click", ".editBtn", contentEditable);
+$(document).on("click", ".done", contentDone);
+
+});
+    
 
 
+// function refreshTime() {
 
+// }
 
+});
