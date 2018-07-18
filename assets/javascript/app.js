@@ -40,29 +40,29 @@ database.ref().on("child_added", function (snapshot) {
 
     // DATABASE REFERENCES
     trainName = snapshot.val().trainName;
-    console.log(trainName);
+    // console.log(trainName);
     destination = snapshot.val().destination;
-    console.log(destination);
+    // console.log(destination);
     firstTrainTime = snapshot.val().firstTrainTime;
-    console.log(firstTrainTime);
+    // console.log(firstTrainTime);
     frequency = parseInt(snapshot.val().frequency);
-    console.log(frequency);
+    // console.log(frequency);
 
     var firstTrainTimeConverted = moment(firstTrainTime, "HH:mm").subtract(1, "years");
-    console.log("TIME CONVERTED: " + firstTrainTimeConverted);
+    // console.log("TIME CONVERTED: " + firstTrainTimeConverted);
 
     var tMinusFirstTrainStartTime = moment().diff(moment(firstTrainTimeConverted), "minutes");
-    console.log("DIFFERENCE IN TIME: " + tMinusFirstTrainStartTime);
+    // console.log("DIFFERENCE IN TIME: " + tMinusFirstTrainStartTime);
 
     var timeDifference = tMinusFirstTrainStartTime % frequency;
-    console.log(timeDifference);
+    // console.log(timeDifference);
 
 
     var minutesAway = frequency - timeDifference;
-    console.log("MINUTES TILL TRAIN: " + minutesAway);
+    // console.log("MINUTES TILL TRAIN: " + minutesAway);
 
     var nextArrivalTime = moment().add(minutesAway, "minutes").format("HH:mm");
-    console.log("ARRIVAL TIME: " + moment(nextArrivalTime).format("HH:mm"));
+    // console.log("ARRIVAL TIME: " + moment(nextArrivalTime).format("HH:mm"));
 
 
     var newRow = $("<tr>").append(
@@ -89,17 +89,19 @@ database.ref().on("child_added", function (snapshot) {
 // FUNCTION THAT ALLOWS ME TO EDIT CELL DATA
 
 function contentEditable() {
-    $('.td').attr('contenteditable', 'true');
+    $(this).closest ('tr').attr('contenteditable', 'true');
     $(this).text("Done");
     $(this).removeClass("editBtn");
     $(this).addClass("done");
 }
 
 function contentDone () {
-    $('.td').attr('contenteditable', 'false');
+    $(this).closest ('tr').attr('contenteditable', 'false');
     $(this).text("Edit");
     $(this).removeClass("done");
     $(this).addClass("editBtn");
+
+
 }
 
 function removeRow () {
